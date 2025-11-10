@@ -13,6 +13,7 @@ import (
 	"time"
 )
 
+// Crawler represents a web crawler for mirroring websites, managing HTTP requests, visited URLs, and concurrency.
 type Crawler struct {
 	Client    *http.Client
 	BaseURL   *url.URL
@@ -23,6 +24,7 @@ type Crawler struct {
 	Wg        sync.WaitGroup
 }
 
+// NewCrawler creates a new Crawler instance with the given start URL, max depth, concurrency limit, and output directory.
 func NewCrawler(startURL string, maxDepth int, concurrency int, outputDir string) (*Crawler, error) {
 	u, err := url.Parse(startURL)
 	if err != nil {
@@ -46,6 +48,7 @@ func NewCrawler(startURL string, maxDepth int, concurrency int, outputDir string
 	}, nil
 }
 
+// Crawl fetches the content of the given URL at the specified depth, processes it, and recursively crawls linked resources.
 func (c *Crawler) Crawl(currentURL string, depth int) {
 	defer c.Wg.Done()
 	if depth > c.MaxDepth {
@@ -110,6 +113,7 @@ func (c *Crawler) Crawl(currentURL string, depth int) {
 	}
 }
 
+// getLocalPath computes the local file path for saving the content of the given URL.
 func (c *Crawler) getLocalPath(u *url.URL) string {
 	p := u.Path
 	if p == "" || p == "/" {
